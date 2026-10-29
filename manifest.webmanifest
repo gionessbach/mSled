@@ -1,0 +1,17 @@
+{
+  "name": "mSled",
+  "short_name": "mSled",
+  "description": "Schlittenbahnen malen und den Fahrer mit echter Physik hinunterflitzen lassen.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fddd02",
+  "theme_color": "#fddd02",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
