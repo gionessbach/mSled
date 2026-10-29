@@ -550,11 +550,16 @@ function resize(){
   W=Math.max(1,r.width); H=Math.max(1,r.height); OX=r.left; OY=r.top;
   cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR);
 }
-new ResizeObserver(resize).observe(cv); addEventListener('resize',resize); resize();
+new ResizeObserver(resize).observe(cv); addEventListener('resize',resize); resize(); viewStart();
 const toS=(x,y)=>[(x-cam.x)*cam.z+W/2,(y-cam.y)*cam.z+H/2];
 const toW=(sx,sy)=>[(sx-W/2)/cam.z+cam.x,(sy-H/2)/cam.z+cam.y];
 const local=e=>{ const r=cv.getBoundingClientRect(); OX=r.left; OY=r.top; return [e.clientX-OX,e.clientY-OY]; };
 function zoomAt(f,sx,sy){ const [wx,wy]=toW(sx,sy); cam.z=Math.max(0.15,Math.min(8,cam.z*f)); const [nx,ny]=toW(sx,sy); cam.x+=wx-nx; cam.y+=wy-ny; }
+// Startansicht: Fahrer gut sichtbar im linken Drittel, Strecke davor im Bild
+function viewStart(){
+  cam.z=Math.max(1.4,Math.min(2.4,W/450));
+  cam.x=8+(0.5-0.28)*W/cam.z; cam.y=0+(0.5-0.38)*H/cam.z;
+}
 function fitAll(){
   let x0=-30,y0=-40,x1=40,y1=20;
   for(const l of world.lines.values()){ x0=Math.min(x0,l.x1,l.x2); x1=Math.max(x1,l.x1,l.x2); y0=Math.min(y0,l.y1,l.y2); y1=Math.max(y1,l.y1,l.y2); }
@@ -853,7 +858,7 @@ function renderTracks(){
     row.querySelector('.go').onclick=()=>{
       const old=[...world.lines.values()]; world.clear();
       for(const l of tr.lines) world.add(l[0],l[1],l[2],l[3],TYPES[l[4]]||'normal');
-      undo.push({kind:'swap',old}); save(); stop(); fitAll(); setCur(tr.id); tracksDlg.hidden=true; toast('„'+tr.name+'“ geladen');
+      undo.push({kind:'swap',old}); save(); stop(); viewStart(); setCur(tr.id); tracksDlg.hidden=true; toast('„'+tr.name+'“ geladen');
     };
     row.querySelector('.code').onclick=()=>{
       const code=encode(tr);
