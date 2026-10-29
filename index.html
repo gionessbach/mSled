@@ -1027,6 +1027,16 @@ function frame(now){
 requestAnimationFrame(frame);
 })();
 </script>
-<script>if("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
+<script>
+if("serviceWorker" in navigator){
+  // Neue Version automatisch laden: beim Öffnen und beim Zurückkehren in die App nach Updates schauen
+  const had=!!navigator.serviceWorker.controller; let reloaded=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(had&&!reloaded){ reloaded=true; location.reload(); } });
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(reg=>{
+    reg.update().catch(()=>{});
+    document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") reg.update().catch(()=>{}); });
+  }).catch(()=>{}));
+}
+</script>
 </body>
 </html>
